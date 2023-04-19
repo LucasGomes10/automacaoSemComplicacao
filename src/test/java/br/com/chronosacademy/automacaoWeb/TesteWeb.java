@@ -39,7 +39,7 @@ public class TesteWeb {
         cursoPage = new CursoPage(driver);
         principalPage.clickBotao();
         String titulo = cursoPage.getTitulo2();
-        assertEquals("Conheça todos os nossos cursos", titulo);
+        assertEquals("Conheça todos os nossos cursos.", titulo);
     }
 
     @After

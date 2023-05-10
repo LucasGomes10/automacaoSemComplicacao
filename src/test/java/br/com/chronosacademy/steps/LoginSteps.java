@@ -1,35 +1,57 @@
 package br.com.chronosacademy.steps;
-
+import br.com.chronosacademy.core.Driver;
+import br.com.chronosacademy.pages.LoginPage;
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
 import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Entao;
 import io.cucumber.java.pt.Quando;
+import org.junit.Assert;
+
+import java.util.Map;
 
 public class LoginSteps {
-    @Dado("que o modal esteja sendo exibida")
-    public void queOModalEstejaSendoExibida() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+
+    LoginPage loginPage;
+
+    @Before
+    public void iniciaNavegador(){
+        new Driver("chrome");
     }
 
-    @Quando("fora realizado um clique fora da modal")
+    @After
+    public void fecharNavegadir(){
+        Driver.getDriver().quit();
+    }
+    @Dado("que o modal esteja sendo exibida")
+    public void queOModalEstejaSendoExibida() {
+        Driver.getDriver().get("https://advantageonlineshopping.com/");
+        loginPage = new LoginPage();
+        loginPage.clickBtnLogin();
+    }
+
+    @Quando("for realizado um clique fora da modal")
     public void foraRealizadoUmCliqueForaDaModal() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        loginPage.clickDivFechaModal();
     }
 
     @Entao("a janela modal deve ser fechada")
-    public void aJanelaModalDeveSerFechada() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+    public void aJanelaModalDeveSerFechada() throws Exception {
+        try{
+            loginPage.invibilityOfBtnFechar();
+        }catch(Exception e){
+            throw new Exception("A janela modal não foi fechada");
+        }
     }
 
-    @Quando("fora realizado um clique no icone de fechar modal")
-    public void foraRealizadoUmCliqueNoIconeDeFecharModal() {
+    @Quando("for realizado um clique no icone de fechar modal")
+    public void forRealizadoUmCliqueNoIconeDeFecharModal() {
+        loginPage.clickBtnFechar();
     }
 
     @Quando("for realizado um clique no link Create New Account")
     public void forRealizadoUmCliqueNoLinkCreateNewAccount() {
-        
+        loginPage.clickLinkCreateAccount();
     }
 
     @Entao("a janela deve ser fechada")
@@ -42,13 +64,19 @@ public class LoginSteps {
     }
 
     @Quando("os campos de login forem preenchidos da seguinte forma")
-    public void osCamposDeLoginForemPreenchidosDaSeguinteForma() {
-        
+    public void osCamposDeLoginForemPreenchidosDaSeguinteForma(Map<String, String> map) {
+        String username = map.get("login");
+        String password = map.get("passsword");
+        boolean remember = Boolean.parseBoolean(map.get("remember"));
+
+        loginPage.setInpUserName(username);
+        loginPage.setInpPassword(password);
+        if(remember == true) loginPage.clickInpRemember();
     }
 
     @Quando("for realizado o clique no botao sign in")
     public void forRealizadoOCliqueNoBotaoSignIn() {
-        
+        loginPage.clickBtnSignIn();
     }
 
     @Entao("deve ser possivel logar no sistema")
@@ -63,5 +91,7 @@ public class LoginSteps {
 
     @Entao("o botao sign in deve permanecer desabilitado")
     public void oBotaoSignInDevePermanecerDesabilitado() {
+        boolean enabled = loginPage.isBtnSignIn();
+        Assert.assertFalse(enabled);
     }
 }

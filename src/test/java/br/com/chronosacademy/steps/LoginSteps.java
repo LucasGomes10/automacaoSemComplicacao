@@ -1,6 +1,8 @@
 package br.com.chronosacademy.steps;
 import br.com.chronosacademy.core.Driver;
+import br.com.chronosacademy.enums.Browser;
 import br.com.chronosacademy.pages.LoginPage;
+import br.com.chronosacademy.pages.NewAccountPage;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.pt.Dado;
@@ -16,7 +18,7 @@ public class LoginSteps {
 
     @Before
     public void iniciaNavegador(){
-        new Driver("chrome");
+        new Driver(Browser.CHROME);
     }
 
     @After
@@ -28,19 +30,20 @@ public class LoginSteps {
         Driver.getDriver().get("https://advantageonlineshopping.com/");
         loginPage = new LoginPage();
         loginPage.clickBtnLogin();
+        loginPage.visibilityOfBtnFechar();
+        loginPage.aguardaLoader();
     }
-
     @Quando("for realizado um clique fora da modal")
     public void foraRealizadoUmCliqueForaDaModal() {
+
         loginPage.clickDivFechaModal();
     }
-
     @Entao("a janela modal deve ser fechada")
     public void aJanelaModalDeveSerFechada() throws Exception {
         try{
-            loginPage.invibilityOfBtnFechar();
+            loginPage.invisibilityOfBtnFechar();
         }catch(Exception e){
-            throw new Exception("A janela modal não foi fechada");
+            throw new Exception("Ajanela modal não foi fechada");
         }
     }
 
@@ -60,7 +63,8 @@ public class LoginSteps {
 
     @Entao("a pagina Create Create New Account deve ser exibida")
     public void aPaginaCreateCreateNewAccountDeveSerExibida() {
-        
+        NewAccountPage newAccountPage = new NewAccountPage();
+        Assert.assertEquals("CREATE ACCOUNT", newAccountPage.getTextNewAccount());
     }
 
     @Quando("os campos de login forem preenchidos da seguinte forma")
